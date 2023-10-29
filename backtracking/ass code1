@@ -1,53 +1,40 @@
 import java.util.*;
+import java.util.Scanner;
+public class Main{
+    
+   public static boolean helper(int []arr , int []vis , int si , int curr_sum , int target , int k)
+    {
+        if(k==1)return true;
+        if(curr_sum>target) return false;
+        if(curr_sum==target)return helper(arr,vis,0,0,target,k-1);
 
-
-public class Main {
-    public static int totalNQueens(int n) {
-        char board[][] = new char[n][n];
-        for(char i[] : board)
-            Arrays.fill(i, '.');
-        return go(0, board);
-    }
-    public static int go(int col, char board[][]){
-        if(col == board.length) return 1;
-        int count = 0;
-        for(int row = 0; row < board.length; row++){
-            if(isSafe(board, row, col)){
-                board[row][col] = 'Q';
-                count += go(col + 1, board);
-                board[row][col] = '.';
+        for(int i=si;i<arr.length;i++){
+            if(vis[i]==-1){
+                vis[i]=1;
+                if(helper(arr,vis,i+1,curr_sum+arr[i],target,k) == true)return true;
+                vis[i]=-1;
             }
         }
-        return count;
+        return false;
     }
-    public static boolean isSafe(char board[][], int row, int col){
-        int dupRow = row;
-        int dupCol = col;
-        
-        while(row >= 0 && col >= 0){
-            if(board[row][col] == 'Q') return false;
-            row--;
-            col--;
-        }
-        
-        row = dupRow;
-        col = dupCol;
-        while(col >= 0){
-            if(board[row][col] == 'Q') return false;
-            col--;
-        }
-        
-        row = dupRow;
-        col = dupCol;
-        while(col >= 0 && row < board.length){
-            if(board[row][col] == 'Q') return false;
-            row++;
-            col--;
-        }
-        return true;
+    public static boolean canPartition(int []arr, int k) {
+        int n=arr.length;
+        int []vis = new int[n];
+        for(int i=0;i<n;i++)vis[i] = -1;
+        int sum=0;
+        for(int i=0;i<n;i++)sum+=arr[i];
+       
+        if(sum%k!=0)return false;
+        return helper(arr,vis,0,0,sum/k,k);
     }
-   public static void main(String[] args) {
-       int n = 4;
-      System.out.println("The desired answer is : " + totalNQueens(n));  
-   }
+    public static void main(String[] args){
+        int []arr = {1 , 2 , 2 , 3};
+        int n = 4;
+        int k = 2;
+        
+        if(canPartition(arr , k) == true){
+            System.out.println("yes it is possible to partition the array.");
+        }
+        else System.out.println("no it is not possible to partition.");
+    }
 }
