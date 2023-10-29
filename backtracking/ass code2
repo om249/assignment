@@ -1,53 +1,47 @@
 import java.util.*;
+import java.util.Scanner;
+public class Main{
+    
+   public static void permute(int[] nums) {
+        List<List<Integer>> result = new ArrayList<>();
+        if (nums == null || nums.length == 0) {
+          return;
+        }
 
-
-public class Main {
-    public static int totalNQueens(int n) {
-        char board[][] = new char[n][n];
-        for(char i[] : board)
-            Arrays.fill(i, '.');
-        return go(0, board);
-    }
-    public static int go(int col, char board[][]){
-        if(col == board.length) return 1;
-        int count = 0;
-        for(int row = 0; row < board.length; row++){
-            if(isSafe(board, row, col)){
-                board[row][col] = 'Q';
-                count += go(col + 1, board);
-                board[row][col] = '.';
+        permutationsHelper(result, nums, 0);
+        
+        for(List<Integer> list : result){
+            for(Integer item : list){
+                System.out.print(item + "  ");
             }
+            System.out.println("");
         }
-        return count;
     }
-    public static boolean isSafe(char board[][], int row, int col){
-        int dupRow = row;
-        int dupCol = col;
-        
-        while(row >= 0 && col >= 0){
-            if(board[row][col] == 'Q') return false;
-            row--;
-            col--;
+
+    private static void permutationsHelper(List<List<Integer>> result, int[] nums, int start) {
+        if (start == nums.length - 1) {
+            List<Integer> list = new ArrayList<>();
+            for (int n : nums) {
+                list.add(n);
+            }
+            result.add(list);
+            return;
         }
-        
-        row = dupRow;
-        col = dupCol;
-        while(col >= 0){
-            if(board[row][col] == 'Q') return false;
-            col--;
+        for (int i = start; i < nums.length; i++) {
+            swap(nums, start, i);
+            permutationsHelper(result, nums, start + 1);
+            swap(nums, start, i);
         }
-        
-        row = dupRow;
-        col = dupCol;
-        while(col >= 0 && row < board.length){
-            if(board[row][col] == 'Q') return false;
-            row++;
-            col--;
-        }
-        return true;
     }
-   public static void main(String[] args) {
-       int n = 4;
-      System.out.println("The desired answer is : " + totalNQueens(n));  
-   }
+
+    private static void swap(int[] nums, int x, int y) {
+        int t = nums[x];
+        nums[x] = nums[y];
+        nums[y] = t;
+    }
+    public static void main(String[] args){
+        int []arr = {1 , 4 , 2 , 3};
+        System.out.println("The possible permutations are : ");
+        permute(arr);
+    }
 }
